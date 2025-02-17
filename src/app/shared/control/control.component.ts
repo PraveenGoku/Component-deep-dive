@@ -1,4 +1,4 @@
-import { Component, HostBinding, HostListener, Input, ViewEncapsulation } from '@angular/core';
+import { afterNextRender, afterRender, Component, ContentChild, ElementRef, HostBinding, HostListener, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
 	selector: 'app-control',
@@ -14,13 +14,29 @@ import { Component, HostBinding, HostListener, Input, ViewEncapsulation } from '
 	},
 })
 export class ControlComponent {
-// @HostBinding('class') className = 'control';
-// @HostListener('click') onClick(){
-// 	console.log('Clicked!');
-// }
-@Input({required:true}) label!:string;
+	// @HostBinding('class') className = 'control';
+	// @HostListener('click') onClick(){
+	// 	console.log('Clicked!');
+	// }
+	@Input({required:true}) label!:string;
 
-onClick1(){
-	console.log('Clicked1!');
-}
+	//This can get hold of elements inside ngContent.
+	@ContentChild('input') private control?:ElementRef<HTMLInputElement | HTMLTextAreaElement>;
+
+	constructor(){
+		afterRender(()=>{
+			//Executes after every render in the whole application for any changes
+			console.log('afterRender');
+		});
+
+		afterNextRender(()=>{
+			//Executes only for the next render in the whole application
+			console.log('afterNextRender');
+		})
+	}
+ 
+	onClick1(){
+		console.log('Clicked1!');
+		console.log(this.control);
+	}
 }
